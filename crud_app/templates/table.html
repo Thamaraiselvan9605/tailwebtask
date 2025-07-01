@@ -1,0 +1,159 @@
+{% extends "log.html" %} {% block main %}
+
+<div class="main">
+  <div class="header">
+    <div class="logo">tailwebs.</div>
+    <div class="nav">
+      <a href="{% url 'getInfo' %}">Home</a>
+      <a href="#" onclick="alertPopup('','Are you sure you want to logout?','You will be logged out of your account')">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Subject</th>
+          <th>Mark</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if data %} {% for i in data %}
+
+        <tr>
+          <td>
+            <div class="avatar">
+              <div class="avatar-circle">
+                {{i.student_name|slice:":1"|upper}}
+              </div>
+              {{i.student_name}}
+            </div>
+          </td>
+          <td>{{i.subject}}</td>
+          <td>{{i.marks}}</td>
+          <td>
+            <div class="action-dropdown">
+              <button class="action-button">
+                <i class="fa-solid fa-caret-down"></i>
+              </button>
+              <div class="dropdown-content">
+                <a
+                  href="#"
+                  class="edit-button"
+                  data-id="{{ i.id }}"
+                  data-name="{{ i.student_name }}"
+                  data-subject="{{ i.subject }}"
+                  data-mark="{{ i.marks }}"
+                >
+                  Edit
+                </a>
+
+                <a href="#" class="delete-button" data-id="{{i.id}}" onclick="alertPopup('{{i.id}}', 'Are you sure?', 'You won\'t be able to revert this!')">Delete</a>
+
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %} {% else %}
+        <tr>
+          <p>- No Data Found -</p>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <button class="add-button" id="openModal">Add</button>
+
+  <!-- Edit Model -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <span class="close-button" id="editCloseModal">&times;</span>
+      <form id="updateForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Name</label>
+          <div class="icon-input">
+            <i class="fa fa-user"></i>
+            <input
+              type="text"
+              id="editName"
+              value=""
+              placeholder="Student Name"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <div class="icon-input">
+            <i class="fa fa-book"></i>
+            <input
+              type="text"
+              id="editSubject"
+              value=""
+              placeholder="Subject Name"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mark</label>
+          <div class="icon-input">
+            <i class="fa fa-pen"></i>
+            <input
+              type="text"
+              id="editMark"
+              value=""
+              placeholder="Mark"
+              required
+            />
+          </div>
+        </div>
+        <input type="hidden" id="editId" name="id" />
+        <button type="submit" class="submit-button">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Subject Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closeModal">&times;</span>
+      <form id="createForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Name</label>
+          <div class="icon-input">
+            <i class="fa fa-user"></i>
+            <input type="text" placeholder="Student Name" id="name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <div class="icon-input">
+            <i class="fa fa-book"></i>
+            <input
+              type="text"
+              placeholder="Subject Name"
+              id="subject"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mark</label>
+          <div class="icon-input">
+            <i class="fa fa-pen"></i>
+            <input type="text" placeholder="Mark" id="mark" required />
+          </div>
+        </div>
+        <button type="submit" class="submit-button">Add</button>
+      </form>
+    </div>
+  </div>
+
+
+  {% endblock main %}
+</div>
